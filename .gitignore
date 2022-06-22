@@ -1,0 +1,4 @@
+
+# API files ignore.
+core_api/.idea/
+core_api/.gradle/

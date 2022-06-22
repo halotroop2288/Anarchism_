@@ -1,0 +1,24 @@
+plugins {
+    id 'java'
+}
+
+group 'kz.chesschicken'
+version 'FER-1'
+
+repositories {
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    /* Using UnsafeEvents last commit with java 8 support. */
+    implementation 'com.github.mineLdiver:UnsafeEvents:d73c6357cc'
+    implementation 'org.json:json:20220320'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.2'
+}
+
+test {
+    useJUnitPlatform()
+}
