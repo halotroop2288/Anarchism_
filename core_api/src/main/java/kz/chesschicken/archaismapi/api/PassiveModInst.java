@@ -17,12 +17,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
  * USA
  */
-package kz.chesschicken.archaismapi;
+package kz.chesschicken.archaismapi.api;
 
 
-import kz.chesschicken.archaismapi.api.ArchaismAPI;
-import kz.chesschicken.archaismapi.mod.ModInstance;
+import kz.chesschicken.archaismapi.api.mod.ModInstance;
 import kz.chesschicken.archaismapi.utils.InvokeHelper;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.lang.invoke.MethodHandle;
@@ -38,7 +38,7 @@ import java.util.zip.ZipFile;
 
 public class PassiveModInst {
 
-    public void prepareFolderMods(Path folder) {
+    public void prepareFolderMods(@NotNull Path folder) {
         try(Stream<Path> pathStream = Files.walk(folder)) {
             MethodHandle __addURL;
             URLClassLoader __mainJar = (URLClassLoader) PassiveModInst.class.getClassLoader();

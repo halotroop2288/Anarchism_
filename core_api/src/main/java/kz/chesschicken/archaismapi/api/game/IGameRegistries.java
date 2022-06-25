@@ -17,24 +17,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
  * USA
  */
-package kz.chesschicken.archaismapi.mod;
+package kz.chesschicken.archaismapi.api.game;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import kz.chesschicken.archaismapi.api.game.raw.RawKeyBind;
 
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface ModDescription {
+public interface IGameRegistries {
 
-    String modid();
+    void registerKeyBind(RawKeyBind rawKeyBind);
 
-    String name() default "DEF_MOD_NAME";
 
-    String description() default "DEF_MOD_DESC";
-
-    String version() default "DEF_MOD_VERSION";
-
-    String icon() default "/pack.png";
 }

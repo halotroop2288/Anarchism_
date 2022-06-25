@@ -19,14 +19,15 @@
  */
 package kz.chesschicken.archaismapi.api.event;
 
-import kz.chesschicken.archaismapi.api.Environment;
+import kz.chesschicken.archaismapi.api.inject.Environment;
 import net.mine_diver.unsafeevents.Event;
+import org.jetbrains.annotations.NotNull;
 
 public class EventInit extends Event {
 
     public final Environment TYPE;
 
-    public EventInit(Environment a) {
+    public EventInit(@NotNull Environment a) {
         this.TYPE = a;
     }
 

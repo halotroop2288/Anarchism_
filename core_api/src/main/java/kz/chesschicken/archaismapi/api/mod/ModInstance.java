@@ -17,11 +17,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
  * USA
  */
-package kz.chesschicken.archaismapi.mod;
+package kz.chesschicken.archaismapi.api.mod;
 
 import kz.chesschicken.archaismapi.api.ArchaismAPI;
+import kz.chesschicken.archaismapi.utils.json.AdvancedJSONObject;
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -34,50 +37,53 @@ public class ModInstance implements Comparable<ModInstance> {
     private final String modid, name, desc, version, icon;
     private final Class<?>[] launchClasses;
 
-    public ModInstance(InputStream o) {
-        JSONObject object = new JSONObject(new BufferedReader(new InputStreamReader(o, StandardCharsets.UTF_8)).lines().collect(Collectors.joining("\n")));
+    public ModInstance(@NotNull InputStream o) {
+        AdvancedJSONObject object = new AdvancedJSONObject(new BufferedReader(new InputStreamReader(o, StandardCharsets.UTF_8)).lines().collect(Collectors.joining("\n")));
         modid = object.getString("modid");
         name = object.getString("name");
         desc = object.getString("description");
         version = object.getString("version");
         icon = object.has("icon") ? object.getString("icon") : "/pack.png";
 
-        Class<?>[] _temp1;
-        try {
-            if(object.has("classes")) {
-                JSONArray _o_classes = object.getJSONArray("classes");
-                _temp1 = new Class[_o_classes.length()];
-                for(int i = 0; i < _o_classes.length(); i++)
-                    _temp1[i] = Class.forName(_o_classes.getString(i));
-            }else _temp1 = new Class[0];
-        }catch (ClassNotFoundException e) {
-            ArchaismAPI.LOGGER.severe(e.getMessage());
-            _temp1 = new Class[0];
-        }
-        launchClasses = _temp1;
+        if(object.has("classes")) {
+            JSONArray _o_classes = object.getJSONArray("classes");
+            launchClasses = new Class[_o_classes.length()];
+            for(int i = 0; i < _o_classes.length(); i++)
+                launchClasses[i] = getChecked(_o_classes.getString(i));
+        }else launchClasses = new Class[0];
     }
 
-    public Class<?>[] getClasses() {
+    @ApiStatus.Internal
+    @Nullable Class<?> getChecked(@NotNull String s) {
+        try {
+            return Class.forName(s);
+        }catch (ClassNotFoundException e) {
+            ArchaismAPI.LOGGER.severe(e.getMessage());
+            return null;
+        }
+    }
+
+    public @Nullable Class<?> @NotNull [] getClasses() {
         return this.launchClasses;
     }
 
-    public String getID() {
+    public @NotNull String getID() {
         return this.modid;
     }
 
-    public String getVersion() {
+    public @NotNull String getVersion() {
         return this.version;
     }
 
-    public String getName() {
+    public @NotNull String getName() {
         return this.name;
     }
 
-    public String getDescription() {
+    public @NotNull String getDescription() {
         return this.desc;
     }
 
-    public String getIcon() {
+    public @NotNull String getIcon() {
         return this.icon;
     }
 

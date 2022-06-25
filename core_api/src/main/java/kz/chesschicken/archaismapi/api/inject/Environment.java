@@ -17,9 +17,28 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
  * USA
  */
-package kz.chesschicken.archaismapi.api;
+package kz.chesschicken.archaismapi.api.inject;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public enum Environment {
     CLIENT_LIKE,
-    SERVER_LIKE
+    SERVER_LIKE;
+
+    private final Map<MappingData, MappingData> mappingData = new HashMap<>();
+
+    public void initMapData(MappingData deob, MappingData obf) {
+        mappingData.putIfAbsent(deob, obf);
+    }
+
+    public <T> @Nullable Class<T> getClass(@NotNull String data) {
+        MappingData u = mappingData.get(new MappingData(MappingData.DataType.CLASS, data));
+        if(u == null)
+            return null;
+        return u.__generateClass();
+    }
 }

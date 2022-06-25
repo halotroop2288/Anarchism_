@@ -21,9 +21,12 @@ package kz.chesschicken.archaismapi.api;
 
 import kz.chesschicken.archaismapi.api.event.EventInit;
 import kz.chesschicken.archaismapi.api.event.EventPostInit;
-import kz.chesschicken.archaismapi.mod.ModInstance;
+import kz.chesschicken.archaismapi.api.inject.Environment;
+import kz.chesschicken.archaismapi.api.mod.ModInstance;
 import net.mine_diver.unsafeevents.Event;
 import net.mine_diver.unsafeevents.EventBus;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -36,15 +39,15 @@ public class ArchaismAPI {
     public final EventBus EVENT_BUS = new EventBus();
     private final Map<String, ModInstance> modList = new HashMap<>();
 
-    public ModInstance getByID(String s) {
+    public @Nullable ModInstance getByID(@NotNull String s) {
         return modList.get(s);
     }
 
-    public Set<String> getModList() {
+    public @NotNull Set<String> getModList() {
         return modList.keySet();
     }
 
-    public void __registerEventBus(Object entry) {
+    public void __registerEventBus(@NotNull Object entry) {
         if (entry.getClass() == Class.class)
             ArchaismAPI.getInstance().EVENT_BUS.register((Class<?>) entry);
         else if (entry instanceof Consumer)
@@ -56,21 +59,21 @@ public class ArchaismAPI {
             ArchaismAPI.getInstance().EVENT_BUS.register(entry);
     }
 
-    public void __addMod(ModInstance a) {
+    public void __addMod(@NotNull ModInstance a) {
         modList.put(a.getID(), a);
     }
 
-    public void __loadPostInit(Environment a) {
+    public void __loadPostInit(@NotNull Environment a) {
         EVENT_BUS.post(new EventPostInit(a));
     }
 
-    public void __loadInit(Environment a) {
+    public void __loadInit(@NotNull Environment a) {
         EVENT_BUS.post(new EventInit(a));
     }
 
     private static ArchaismAPI instance;
     public static final Logger LOGGER = Logger.getLogger("ArchaismAPI");
-    public static ArchaismAPI getInstance() {
+    public static @NotNull ArchaismAPI getInstance() {
         if(instance == null)
             instance = new ArchaismAPI();
         return instance;
