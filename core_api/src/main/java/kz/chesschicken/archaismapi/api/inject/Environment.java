@@ -24,8 +24,8 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import org.jetbrains.annotations.NotNull;
 
 public enum Environment {
-    CLIENT_LIKE,
-    SERVER_LIKE;
+    CLIENT,
+    SERVER;
 
     private final AbstractObject2ObjectMap<String, String> mappings = new Object2ObjectOpenHashMap<>();
 
