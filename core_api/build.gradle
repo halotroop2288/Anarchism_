@@ -14,8 +14,11 @@ dependencies {
     /* Using UnsafeEvents last commit with java 8 support. */
     implementation 'com.github.mineLdiver:UnsafeEvents:d73c6357cc'
     implementation 'org.json:json:20220320'
+    implementation 'it.unimi.dsi:fastutil:8.5.8'
+
     annotationProcessor 'org.jetbrains:annotations:23.0.0'
     implementation 'org.jetbrains:annotations:23.0.0'
+
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.2'

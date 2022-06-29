@@ -19,26 +19,29 @@
  */
 package kz.chesschicken.archaismapi.api.inject;
 
+import it.unimi.dsi.fastutil.objects.AbstractObject2ObjectMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public enum Environment {
     CLIENT_LIKE,
     SERVER_LIKE;
 
-    private final Map<MappingData, MappingData> mappingData = new HashMap<>();
+    private final AbstractObject2ObjectMap<String, String> mappings = new Object2ObjectOpenHashMap<>();
 
-    public void initMapData(MappingData deob, MappingData obf) {
-        mappingData.putIfAbsent(deob, obf);
+    public void addMapping(@NotNull String s, @NotNull String s1) {
+        mappings.putIfAbsent(s, s1);
     }
 
-    public <T> @Nullable Class<T> getClass(@NotNull String data) {
-        MappingData u = mappingData.get(new MappingData(MappingData.DataType.CLASS, data));
-        if(u == null)
-            return null;
-        return u.__generateClass();
+    public @NotNull String getMapping(@NotNull String s) {
+        return mappings.getOrDefault(s, s);
+    }
+
+    public static void addMapping(@NotNull Environment environment, @NotNull String deob, @NotNull String obf) {
+        environment.addMapping(deob, obf);
+    }
+
+    public static @NotNull String getMapping(@NotNull Environment environment, @NotNull String deob) {
+        return environment.getMapping(deob);
     }
 }

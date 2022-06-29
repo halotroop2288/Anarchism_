@@ -81,6 +81,8 @@ public class PassiveModInst {
 
         for(String a : ArchaismAPI.getInstance().getModList()) {
             b = ArchaismAPI.getInstance().getByID(a);
+            if(b.cancelInit())
+                continue;
             for(Class<?> c : b.getClasses()) {
                 try {
                     d = InvokeHelper.IMPL_LOOKUP_INSTANCE.findConstructor(c, MethodType.methodType(void.class));

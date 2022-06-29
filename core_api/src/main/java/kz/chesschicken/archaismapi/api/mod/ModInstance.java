@@ -38,19 +38,19 @@ public class ModInstance implements Comparable<ModInstance> {
     private final Class<?>[] launchClasses;
 
     public ModInstance(@NotNull InputStream o) {
-        AdvancedJSONObject object = new AdvancedJSONObject(new BufferedReader(new InputStreamReader(o, StandardCharsets.UTF_8)).lines().collect(Collectors.joining("\n")));
+        AdvancedJSONObject object = new AdvancedJSONObject(new BufferedReader(new InputStreamReader(o, StandardCharsets.UTF_8)).lines().collect(Collectors.joining()));
         modid = object.getString("modid");
         name = object.getString("name");
-        desc = object.getString("description");
+        desc = object.getOrDefault("description", "DEFAULT_DESCRIPTION");
         version = object.getString("version");
-        icon = object.has("icon") ? object.getString("icon") : "/pack.png";
+        icon = object.getOrDefault("icon","/pack.png");
 
         if(object.has("classes")) {
             JSONArray _o_classes = object.getJSONArray("classes");
             launchClasses = new Class[_o_classes.length()];
             for(int i = 0; i < _o_classes.length(); i++)
                 launchClasses[i] = getChecked(_o_classes.getString(i));
-        }else launchClasses = new Class[0];
+        } else launchClasses = new Class[0];
     }
 
     @ApiStatus.Internal
@@ -65,6 +65,10 @@ public class ModInstance implements Comparable<ModInstance> {
 
     public @Nullable Class<?> @NotNull [] getClasses() {
         return this.launchClasses;
+    }
+
+    public boolean cancelInit() {
+        return this.launchClasses == null;
     }
 
     public @NotNull String getID() {

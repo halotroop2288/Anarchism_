@@ -26,7 +26,6 @@ import kz.chesschicken.archaismapi.api.mod.ModInstance;
 import net.mine_diver.unsafeevents.Event;
 import net.mine_diver.unsafeevents.EventBus;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -39,7 +38,7 @@ public class ArchaismAPI {
     public final EventBus EVENT_BUS = new EventBus();
     private final Map<String, ModInstance> modList = new HashMap<>();
 
-    public @Nullable ModInstance getByID(@NotNull String s) {
+    public @NotNull ModInstance getByID(@NotNull String s) {
         return modList.get(s);
     }
 
