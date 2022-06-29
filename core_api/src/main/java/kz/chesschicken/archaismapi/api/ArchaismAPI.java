@@ -19,34 +19,31 @@
  */
 package kz.chesschicken.archaismapi.api;
 
-import kz.chesschicken.archaismapi.api.event.EventInit;
-import kz.chesschicken.archaismapi.api.event.EventPostInit;
-import kz.chesschicken.archaismapi.api.inject.Environment;
+import it.unimi.dsi.fastutil.objects.AbstractObject2ObjectMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectSet;
 import kz.chesschicken.archaismapi.api.mod.ModInstance;
 import net.mine_diver.unsafeevents.Event;
 import net.mine_diver.unsafeevents.EventBus;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
 
 public class ArchaismAPI {
     public final EventBus EVENT_BUS = new EventBus();
-    private final Map<String, ModInstance> modList = new HashMap<>();
+    private final AbstractObject2ObjectMap<String, ModInstance> modList = new Object2ObjectOpenHashMap<>();
 
     public @NotNull ModInstance getByID(@NotNull String s) {
         return modList.get(s);
     }
 
-    public @NotNull Set<String> getModList() {
+    public @NotNull ObjectSet<String> getModList() {
         return modList.keySet();
     }
 
-    public void __registerEventBus(@NotNull Object entry) {
+    public void registerEventBus(@NotNull Object entry) {
         if (entry.getClass() == Class.class)
             ArchaismAPI.getInstance().EVENT_BUS.register((Class<?>) entry);
         else if (entry instanceof Consumer)
@@ -58,16 +55,8 @@ public class ArchaismAPI {
             ArchaismAPI.getInstance().EVENT_BUS.register(entry);
     }
 
-    public void __addMod(@NotNull ModInstance a) {
+    public void registerMod(@NotNull ModInstance a) {
         modList.put(a.getID(), a);
-    }
-
-    public void __loadPostInit(@NotNull Environment a) {
-        EVENT_BUS.post(new EventPostInit(a));
-    }
-
-    public void __loadInit(@NotNull Environment a) {
-        EVENT_BUS.post(new EventInit(a));
     }
 
     private static ArchaismAPI instance;

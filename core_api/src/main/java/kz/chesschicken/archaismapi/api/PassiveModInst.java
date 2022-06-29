@@ -65,7 +65,7 @@ public class PassiveModInst {
                         //Impossible...
                         throw new RuntimeException(e);
                     }
-                    ArchaismAPI.getInstance().__addMod(new ModInstance(zipFile.getInputStream(mod_descFile)));
+                    ArchaismAPI.getInstance().registerMod(new ModInstance(zipFile.getInputStream(mod_descFile)));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -84,9 +84,11 @@ public class PassiveModInst {
             if(b.cancelInit())
                 continue;
             for(Class<?> c : b.getClasses()) {
+                if(c == null)
+                    continue;
                 try {
                     d = InvokeHelper.IMPL_LOOKUP_INSTANCE.findConstructor(c, MethodType.methodType(void.class));
-                    ArchaismAPI.getInstance().__registerEventBus(d.invoke());
+                    ArchaismAPI.getInstance().registerEventBus(d.invoke());
                 } catch (Throwable e) {
                     e.printStackTrace();
                 }
