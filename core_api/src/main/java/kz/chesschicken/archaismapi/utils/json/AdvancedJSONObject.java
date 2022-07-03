@@ -1,5 +1,5 @@
 /**
- * Archaism Underscore - a small API for ML/Fabric flexible integration.
+ * Archaism Underscore - a small API for flexible integration.
  * Copyright (C) 2022 ChessChicken-KZ
  *
  * This library is free software; you can redistribute it and/or
