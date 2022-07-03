@@ -25,7 +25,7 @@ import org.jetbrains.annotations.NotNull;
 
 public enum Environment {
     CLIENT,
-    SERVER;
+    SERVER; //<- is this even going to be implemented?
 
     private final AbstractObject2ObjectMap<String, String> mappings = new Object2ObjectOpenHashMap<>();
 

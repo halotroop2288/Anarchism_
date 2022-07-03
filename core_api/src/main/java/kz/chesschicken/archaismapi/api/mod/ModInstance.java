@@ -19,7 +19,7 @@
  */
 package kz.chesschicken.archaismapi.api.mod;
 
-import kz.chesschicken.archaismapi.api.ArchaismAPI;
+import kz.chesschicken.archaismapi.api.ArchaismUnderscore;
 import kz.chesschicken.archaismapi.utils.json.AdvancedJSONObject;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -34,9 +34,9 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class ModInstance implements Comparable<ModInstance> {
-    private final String modid, name, desc, version, icon;
-    private final Class<?>[] launchClasses;
-    private final String[] mixinFiles;
+    protected final String modid, name, desc, version, icon;
+    protected final Class<?>[] launchClasses;
+    protected final String[] mixinFiles;
 
     public ModInstance(@NotNull InputStream o) {
         AdvancedJSONObject object = new AdvancedJSONObject(new BufferedReader(new InputStreamReader(o, StandardCharsets.UTF_8)).lines().collect(Collectors.joining()));
@@ -66,17 +66,13 @@ public class ModInstance implements Comparable<ModInstance> {
         try {
             return Class.forName(s);
         }catch (ClassNotFoundException e) {
-            ArchaismAPI.LOGGER.severe(e.getMessage());
+            ArchaismUnderscore.LOGGER.severe(e.getMessage());
             return null;
         }
     }
 
     public @Nullable Class<?> @NotNull [] getClasses() {
         return this.launchClasses;
-    }
-
-    public boolean cancelInit() {
-        return this.launchClasses == null;
     }
 
     public @NotNull String getID() {

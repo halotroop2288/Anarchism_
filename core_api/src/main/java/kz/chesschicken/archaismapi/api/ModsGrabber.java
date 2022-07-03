@@ -36,12 +36,12 @@ import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-public class PassiveModInst {
+public class ModsGrabber {
 
     public static void prepareFolderMods(@NotNull Path folder) {
         try(Stream<Path> pathStream = Files.walk(folder)) {
             MethodHandle __addURL;
-            URLClassLoader __mainJar = (URLClassLoader) PassiveModInst.class.getClassLoader();
+            URLClassLoader __mainJar = (URLClassLoader) ModsGrabber.class.getClassLoader();
 
             try {
                 __addURL = InvokeHelper.IMPL_LOOKUP_INSTANCE.findVirtual(URLClassLoader.class, "addURL", MethodType.methodType(void.class, URL.class));
@@ -55,7 +55,7 @@ public class PassiveModInst {
                     ZipEntry mod_descFile = zipFile.getEntry("description.json");
 
                     if(mod_descFile == null) {
-                        ArchaismAPI.LOGGER.severe("The file " + path.toFile().getName() + " doesn't include description file! Aborting its initialization!");
+                        ArchaismUnderscore.LOGGER.severe("The file " + path.toFile().getName() + " doesn't include description file! Aborting its initialization!");
                         return;
                     }
 
@@ -65,30 +65,30 @@ public class PassiveModInst {
                         //Impossible...
                         throw new RuntimeException(e);
                     }
-                    ArchaismAPI.getInstance().registerMod(new ModInstance(zipFile.getInputStream(mod_descFile)));
+                    ArchaismUnderscore.getInstance().registerMod(new ModInstance(zipFile.getInputStream(mod_descFile)));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             });
         }catch (IOException e) {
-            ArchaismAPI.LOGGER.severe("Can't walk inside folder (" + folder.toAbsolutePath() + ") !");
+            ArchaismUnderscore.LOGGER.severe("Can't walk inside folder (" + folder.toAbsolutePath() + ") !");
         }
     }
 
     public static void loadMods() {
-        MethodHandle d;
-        ModInstance b;
+        MethodHandle invokeClass;
+        ModInstance modInstance;
 
-        for(String a : ArchaismAPI.getInstance().getModList()) {
-            b = ArchaismAPI.getInstance().getByID(a);
-            if(b.cancelInit())
+        for(String a : ArchaismUnderscore.getInstance().getModList()) {
+            modInstance = ArchaismUnderscore.getInstance().getByID(a);
+            if(modInstance.getClasses().length < 1)
                 continue;
-            for(Class<?> c : b.getClasses()) {
-                if(c == null)
+            for(Class<?> clazz : modInstance.getClasses()) {
+                if(clazz == null)
                     continue;
                 try {
-                    d = InvokeHelper.IMPL_LOOKUP_INSTANCE.findConstructor(c, MethodType.methodType(void.class));
-                    ArchaismAPI.getInstance().registerEventBus(d.invoke());
+                    invokeClass = InvokeHelper.IMPL_LOOKUP_INSTANCE.findConstructor(clazz, MethodType.methodType(void.class));
+                    ArchaismUnderscore.getInstance().registerEventBus(invokeClass.invoke());
                 } catch (Throwable e) {
                     e.printStackTrace();
                 }

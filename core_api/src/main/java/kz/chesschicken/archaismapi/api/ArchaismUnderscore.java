@@ -26,12 +26,13 @@ import kz.chesschicken.archaismapi.api.mod.ModInstance;
 import net.mine_diver.unsafeevents.Event;
 import net.mine_diver.unsafeevents.EventBus;
 import org.jetbrains.annotations.NotNull;
+import org.spongepowered.asm.mixin.Mixins;
 
 import java.lang.reflect.Method;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
 
-public class ArchaismAPI {
+public class ArchaismUnderscore {
     public final EventBus EVENT_BUS = new EventBus();
     private final AbstractObject2ObjectMap<String, ModInstance> modList = new Object2ObjectOpenHashMap<>();
 
@@ -45,25 +46,36 @@ public class ArchaismAPI {
 
     public void registerEventBus(@NotNull Object entry) {
         if (entry.getClass() == Class.class)
-            ArchaismAPI.getInstance().EVENT_BUS.register((Class<?>) entry);
+            ArchaismUnderscore.getInstance().EVENT_BUS.register((Class<?>) entry);
         else if (entry instanceof Consumer)
             //noinspection unchecked
-            ArchaismAPI.getInstance().EVENT_BUS.register((Consumer<? extends Event>) entry);
+            ArchaismUnderscore.getInstance().EVENT_BUS.register((Consumer<? extends Event>) entry);
         else if (entry.getClass() == Method.class)
-            ArchaismAPI.getInstance().EVENT_BUS.register((Method) entry);
+            ArchaismUnderscore.getInstance().EVENT_BUS.register((Method) entry);
         else
-            ArchaismAPI.getInstance().EVENT_BUS.register(entry);
+            ArchaismUnderscore.getInstance().EVENT_BUS.register(entry);
+    }
+
+    public void loadMixins() {
+        ModInstance modInstance;
+        for(String a : getModList()) {
+            modInstance = getByID(a);
+            if(modInstance.getMixinBootstraps().length < 1)
+                continue;
+            for(String s : modInstance.getMixinBootstraps())
+                Mixins.addConfiguration(s);
+        }
     }
 
     public void registerMod(@NotNull ModInstance a) {
         modList.put(a.getID(), a);
     }
 
-    private static ArchaismAPI instance;
+    private static ArchaismUnderscore instance;
     public static final Logger LOGGER = Logger.getLogger("ArchaismAPI");
-    public static @NotNull ArchaismAPI getInstance() {
+    public static @NotNull ArchaismUnderscore getInstance() {
         if(instance == null)
-            instance = new ArchaismAPI();
+            instance = new ArchaismUnderscore();
         return instance;
     }
 }

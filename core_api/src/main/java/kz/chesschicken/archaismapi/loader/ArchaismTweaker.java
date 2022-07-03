@@ -19,8 +19,8 @@
  */
 package kz.chesschicken.archaismapi.loader;
 
-import kz.chesschicken.archaismapi.api.ArchaismAPI;
-import kz.chesschicken.archaismapi.api.PassiveModInst;
+import kz.chesschicken.archaismapi.api.ArchaismUnderscore;
+import kz.chesschicken.archaismapi.api.ModsGrabber;
 import kz.chesschicken.archaismapi.api.event.EventGeneralInit;
 import kz.chesschicken.archaismapi.api.inject.Environment;
 import net.minecraft.launchwrapper.ITweaker;
@@ -42,22 +42,27 @@ public class ArchaismTweaker implements ITweaker {
 
     @Override
     public void injectIntoClassLoader(LaunchClassLoader classLoader) {
+        //TODO: Debug code, remove later.
         System.out.println("Arguments: " + args.toString());
 
+        //TODO: Add here a check for need.
         classLoader.registerTransformer("net.minecraft.launchwrapper.injector.VanillaTweakInjector");
 
         /* Init Mixins */
         MixinBootstrap.init();
         MixinEnvironment.getDefaultEnvironment().setSide(MixinEnvironment.Side.CLIENT);
 
+        /* Parse Mods */
         Path path = new File("mods").toPath();
         System.out.println("Mods folder: " + path.toAbsolutePath());
-        PassiveModInst.prepareFolderMods(path);
-        PassiveModInst.loadMods();
+        ModsGrabber.prepareFolderMods(path);
+        ModsGrabber.loadMods();
 
-        /* Parse Mods */
+        /* Init mods mixins. */
+        ArchaismUnderscore.getInstance().loadMixins();
 
-        ArchaismAPI.getInstance().EVENT_BUS.post(new EventGeneralInit.EventPreInit(Environment.CLIENT));
+        /* Init mods pre-init state. */
+        ArchaismUnderscore.getInstance().EVENT_BUS.post(new EventGeneralInit.EventPreInit(Environment.CLIENT));
     }
 
     @Override
