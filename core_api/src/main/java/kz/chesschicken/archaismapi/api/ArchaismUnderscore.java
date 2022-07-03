@@ -23,18 +23,13 @@ import it.unimi.dsi.fastutil.objects.AbstractObject2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectSet;
 import kz.chesschicken.archaismapi.api.mod.ModInstance;
-import net.mine_diver.unsafeevents.Event;
-import net.mine_diver.unsafeevents.EventBus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixins;
 
-import java.lang.reflect.Method;
-import java.util.function.Consumer;
 
 public class ArchaismUnderscore {
-    public final EventBus EVENT_BUS = new EventBus();
     private final AbstractObject2ObjectMap<String, ModInstance> modList = new Object2ObjectOpenHashMap<>();
 
     public @NotNull ModInstance getByID(@NotNull String s) {
@@ -43,18 +38,6 @@ public class ArchaismUnderscore {
 
     public @NotNull ObjectSet<String> getModList() {
         return modList.keySet();
-    }
-
-    public void registerEventBus(@NotNull Object entry) {
-        if (entry.getClass() == Class.class)
-            ArchaismUnderscore.getInstance().EVENT_BUS.register((Class<?>) entry);
-        else if (entry instanceof Consumer)
-            //noinspection unchecked
-            ArchaismUnderscore.getInstance().EVENT_BUS.register((Consumer<? extends Event>) entry);
-        else if (entry.getClass() == Method.class)
-            ArchaismUnderscore.getInstance().EVENT_BUS.register((Method) entry);
-        else
-            ArchaismUnderscore.getInstance().EVENT_BUS.register(entry);
     }
 
     public void loadMixins() {
@@ -69,6 +52,7 @@ public class ArchaismUnderscore {
     }
 
     public void registerMod(@NotNull ModInstance a) {
+        System.out.println("Registering mod: " + a.getID() + " ; name: " + a.getName());
         modList.put(a.getID(), a);
     }
 

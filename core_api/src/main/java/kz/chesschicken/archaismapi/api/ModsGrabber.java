@@ -22,75 +22,47 @@ package kz.chesschicken.archaismapi.api;
 
 import kz.chesschicken.archaismapi.api.mod.ModInstance;
 import kz.chesschicken.archaismapi.utils.InvokeHelper;
+import net.minecraft.launchwrapper.LaunchClassLoader;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodType;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.jar.JarFile;
-import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 public class ModsGrabber {
 
-    public static void prepareFolderMods(@NotNull Path folder) {
-        try(Stream<Path> pathStream = Files.walk(folder)) {
-            MethodHandle __addURL;
-            URLClassLoader __mainJar = (URLClassLoader) ModsGrabber.class.getClassLoader();
 
-            try {
-                __addURL = InvokeHelper.IMPL_LOOKUP_INSTANCE.findVirtual(URLClassLoader.class, "addURL", MethodType.methodType(void.class, URL.class));
-            } catch (NoSuchMethodException | IllegalAccessException e) {
-                throw new RuntimeException(e);
-            }
+    public static void prepareFolderMods(@NotNull File folder, LaunchClassLoader loader) {
+//        MethodHandle __addURL;
+//        URLClassLoader __mainJar = (URLClassLoader) ClassLoader.getSystemClassLoader();
+//
+//        try {
+//            __addURL = InvokeHelper.getImplLookupInstance().findVirtual(URLClassLoader.class, "addURL", MethodType.methodType(void.class, URL.class));
+//        } catch (NoSuchMethodException | IllegalAccessException e) {
+//            throw new RuntimeException(e);
+//        }
+        if(!folder.isDirectory())
+            throw new RuntimeException("What the fock?");
 
-            pathStream.filter(path -> path.toFile().getName().endsWith(".jar")).forEach(path -> {
-                try {
-                    ZipFile zipFile = new JarFile(path.toFile());
-                    ZipEntry mod_descFile = zipFile.getEntry("description.json");
-
-                    if(mod_descFile == null) {
-                        ArchaismUnderscore.LOGGER.error("The file " + path.toFile().getName() + " doesn't include description file! Aborting its initialization!");
-                        return;
-                    }
-
+        for (File fileEntry : folder.listFiles()) {
+            if (!fileEntry.isDirectory()) {
+                if(fileEntry.getName().endsWith(".jar")) {
                     try {
-                        __addURL.invoke(__mainJar, path.toUri().toURL());
-                    } catch (Throwable e) {
-                        //Impossible...
-                        throw new RuntimeException(e);
+                        ZipFile zipFile = new JarFile(fileEntry);
+                        ZipEntry mod_descFile = zipFile.getEntry("description.json");
+
+                        if(mod_descFile == null) {
+                            ArchaismUnderscore.LOGGER.error("The file " + fileEntry.getName() + " doesn't include description file! Aborting its initialization!");
+                            return;
+                        }
+                        loader.addURL(fileEntry.toURI().toURL());
+                        ArchaismUnderscore.getInstance().registerMod(new ModInstance(zipFile.getInputStream(mod_descFile)));
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-                    ArchaismUnderscore.getInstance().registerMod(new ModInstance(zipFile.getInputStream(mod_descFile)));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
-        }catch (IOException e) {
-            ArchaismUnderscore.LOGGER.error("Can't walk inside folder (" + folder.toAbsolutePath() + ") !");
-        }
-    }
-
-    public static void loadMods() {
-        MethodHandle invokeClass;
-        ModInstance modInstance;
-
-        for(String a : ArchaismUnderscore.getInstance().getModList()) {
-            modInstance = ArchaismUnderscore.getInstance().getByID(a);
-            if(modInstance.getClasses().length < 1)
-                continue;
-            for(Class<?> clazz : modInstance.getClasses()) {
-                if(clazz == null)
-                    continue;
-                try {
-                    invokeClass = InvokeHelper.IMPL_LOOKUP_INSTANCE.findConstructor(clazz, MethodType.methodType(void.class));
-                    ArchaismUnderscore.getInstance().registerEventBus(invokeClass.invoke());
-                } catch (Throwable e) {
-                    e.printStackTrace();
                 }
             }
         }

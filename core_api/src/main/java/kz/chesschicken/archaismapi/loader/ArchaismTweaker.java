@@ -21,19 +21,47 @@ package kz.chesschicken.archaismapi.loader;
 
 import kz.chesschicken.archaismapi.api.ArchaismUnderscore;
 import kz.chesschicken.archaismapi.api.ModsGrabber;
-import kz.chesschicken.archaismapi.api.event.EventGeneralInit;
-import kz.chesschicken.archaismapi.api.inject.Environment;
+import kz.chesschicken.archaismapi.utils.InvokeHelper;
 import net.minecraft.launchwrapper.ITweaker;
 import net.minecraft.launchwrapper.LaunchClassLoader;
 import org.spongepowered.asm.launch.MixinBootstrap;
 import org.spongepowered.asm.mixin.MixinEnvironment;
 
 import java.io.File;
-import java.nio.file.Path;
 import java.util.List;
 
 public class ArchaismTweaker implements ITweaker {
     private List<String> args;
+
+    boolean parseBoolean(String f) {
+        for(String a : args) {
+            if(a.startsWith(f)) {
+                String[] b = a.split("=");
+                return b[1].equalsIgnoreCase("true");
+            }
+        }
+        return false;
+    }
+
+    String parseString(String f) {
+        for(String a : args) {
+            if(a.startsWith(f)) {
+                return a.split("=")[1];
+            }
+        }
+        return null;
+    }
+
+    String[] provideGameArgs() {
+        String[] main = new String[] {"null", "null"};
+        for(String a : args) {
+            if(a.startsWith("--username"))
+                main[0] = a.split("=")[1];
+            if(a.startsWith("--session"))
+                main[1] = a.split("=")[1];
+        }
+        return main;
+    }
 
     @Override
     public void acceptOptions(List<String> args, File gameDir, File assetsDir, String profile) {
@@ -43,35 +71,34 @@ public class ArchaismTweaker implements ITweaker {
     @Override
     public void injectIntoClassLoader(LaunchClassLoader classLoader) {
         //TODO: Debug code, remove later.
-        ArchaismUnderscore.LOGGER.info("Arguments: " + args.toString());
+        System.out.println("Arguments: " + args.toString());
+
+        InvokeHelper.initClassLoader(classLoader);
 
         //TODO: Add here a check for need.
-        classLoader.registerTransformer("net.minecraft.launchwrapper.injector.VanillaTweakInjector");
+        if(parseBoolean("--au-vti")) {
+            System.out.println("Accepted VanillaTweakInjector!");
+            classLoader.registerTransformer("net.minecraft.launchwrapper.injector.VanillaTweakInjector");
+        }
+
+        /* Parse Mods */
+        File modsFolder = new File("mods");
+        System.out.println("Mods folder: " + modsFolder.getAbsolutePath());
+        ModsGrabber.prepareFolderMods(modsFolder, classLoader);
 
         /* Init Mixins */
         MixinBootstrap.init();
         MixinEnvironment.getDefaultEnvironment().setSide(MixinEnvironment.Side.CLIENT);
-
-        /* Parse Mods */
-        Path path = new File("mods").toPath();
-        ArchaismUnderscore.LOGGER.info("Mods folder: " + path.toAbsolutePath());
-        ModsGrabber.prepareFolderMods(path);
-        ModsGrabber.loadMods();
-
-        /* Init mods mixins. */
         ArchaismUnderscore.getInstance().loadMixins();
-
-        /* Init mods pre-init state. */
-        ArchaismUnderscore.getInstance().EVENT_BUS.post(new EventGeneralInit.EventPreInit(Environment.CLIENT));
     }
 
     @Override
     public String getLaunchTarget() {
-        return "net.minecraft.client.Minecraft";
+        return parseString("--au-mc");
     }
 
     @Override
     public String[] getLaunchArguments() {
-        return args.toArray(new String[0]);
+        return provideGameArgs();
     }
 }

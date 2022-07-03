@@ -8,13 +8,10 @@ version 'FER-1'
 repositories {
     mavenCentral()
     maven { url 'https://jitpack.io' }
-    maven { url 'https://nexus.velocitypowered.com/repository/maven-public/' }
+    maven { url 'https://repo.spongepowered.org/repository/maven-public/' }
 }
 
 dependencies {
-    /* Using UnsafeEvents last commit with java 8 support. */
-    implementation 'com.github.mineLdiver:UnsafeEvents:d73c6357cc'
-
     /* JSON main library. */
     implementation 'org.json:json:20220320'
 

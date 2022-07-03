@@ -20,6 +20,7 @@
 package kz.chesschicken.archaismapi.api.mod;
 
 import kz.chesschicken.archaismapi.api.ArchaismUnderscore;
+import kz.chesschicken.archaismapi.utils.InvokeHelper;
 import kz.chesschicken.archaismapi.utils.json.AdvancedJSONObject;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -64,7 +65,7 @@ public class ModInstance implements Comparable<ModInstance> {
     @ApiStatus.Internal
     @Nullable Class<?> getChecked(@NotNull String s) {
         try {
-            return Class.forName(s);
+            return InvokeHelper.getHomeClassLoader().loadClass(s);
         }catch (ClassNotFoundException e) {
             ArchaismUnderscore.LOGGER.error(e.getMessage());
             return null;

@@ -19,6 +19,7 @@
  */
 package kz.chesschicken.archaismapi.utils;
 
+import org.jetbrains.annotations.NotNull;
 import sun.misc.Unsafe;
 
 import java.lang.invoke.MethodHandles;
@@ -26,20 +27,45 @@ import java.lang.reflect.Field;
 
 public class InvokeHelper {
 
-    public static Unsafe UNSAFE_INSTANCE;
-    public static MethodHandles.Lookup IMPL_LOOKUP_INSTANCE;
+    private static Unsafe UNSAFE_INSTANCE;
+    private static MethodHandles.Lookup IMPL_LOOKUP_INSTANCE;
+    private static ClassLoader homeClassLoader;
+    static boolean ehCL;
 
-    static {
-        //Getting Unsafe field.
-        try {
-            Field f = Unsafe.class.getDeclaredField("theUnsafe");
-            f.setAccessible(true);
-            UNSAFE_INSTANCE = (Unsafe) f.get(null);
+    public static void initClassLoader(@NotNull ClassLoader loader) {
+        homeClassLoader = loader;
+        ehCL = true;
+    }
 
-            Field a = MethodHandles.Lookup.class.getDeclaredField("IMPL_LOOKUP");
-            IMPL_LOOKUP_INSTANCE = (MethodHandles.Lookup) UNSAFE_INSTANCE.getObject(UNSAFE_INSTANCE.staticFieldBase(a), UNSAFE_INSTANCE.staticFieldOffset(a));
-        } catch (NoSuchFieldException | IllegalAccessException exp) {
-            exp.printStackTrace();
+    public static @NotNull ClassLoader getHomeClassLoader() {
+        if(ehCL)
+            return homeClassLoader;
+        System.out.println("Something is wrong... entirely wrong...");
+        return ClassLoader.getSystemClassLoader();
+    }
+
+    public static @NotNull Unsafe getUnsafeInstance() {
+        if(UNSAFE_INSTANCE == null) {
+            try {
+                Field f = Unsafe.class.getDeclaredField("theUnsafe");
+                f.setAccessible(true);
+                UNSAFE_INSTANCE = (Unsafe) f.get(null);
+            } catch (NoSuchFieldException | IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
         }
+        return UNSAFE_INSTANCE;
+    }
+
+    public static @NotNull MethodHandles.Lookup getImplLookupInstance() {
+        if(IMPL_LOOKUP_INSTANCE == null) {
+            try {
+                Field a = MethodHandles.Lookup.class.getDeclaredField("IMPL_LOOKUP");
+                IMPL_LOOKUP_INSTANCE = (MethodHandles.Lookup) getUnsafeInstance().getObject(getUnsafeInstance().staticFieldBase(a), getUnsafeInstance().staticFieldOffset(a));
+            } catch (NoSuchFieldException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return IMPL_LOOKUP_INSTANCE;
     }
 }
