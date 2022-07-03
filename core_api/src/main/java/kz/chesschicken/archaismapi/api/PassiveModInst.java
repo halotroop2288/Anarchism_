@@ -38,7 +38,7 @@ import java.util.zip.ZipFile;
 
 public class PassiveModInst {
 
-    public void prepareFolderMods(@NotNull Path folder) {
+    public static void prepareFolderMods(@NotNull Path folder) {
         try(Stream<Path> pathStream = Files.walk(folder)) {
             MethodHandle __addURL;
             URLClassLoader __mainJar = (URLClassLoader) PassiveModInst.class.getClassLoader();
@@ -75,7 +75,7 @@ public class PassiveModInst {
         }
     }
 
-    public void loadMods() {
+    public static void loadMods() {
         MethodHandle d;
         ModInstance b;
 

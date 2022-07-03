@@ -36,6 +36,7 @@ import java.util.stream.Collectors;
 public class ModInstance implements Comparable<ModInstance> {
     private final String modid, name, desc, version, icon;
     private final Class<?>[] launchClasses;
+    private final String[] mixinFiles;
 
     public ModInstance(@NotNull InputStream o) {
         AdvancedJSONObject object = new AdvancedJSONObject(new BufferedReader(new InputStreamReader(o, StandardCharsets.UTF_8)).lines().collect(Collectors.joining()));
@@ -51,6 +52,13 @@ public class ModInstance implements Comparable<ModInstance> {
             for(int i = 0; i < _o_classes.length(); i++)
                 launchClasses[i] = getChecked(_o_classes.getString(i));
         } else launchClasses = new Class[0];
+
+        if(object.has("mixins")) {
+            JSONArray _o_mixins = object.getJSONArray("mixins");
+            mixinFiles = new String[_o_mixins.length()];
+            for(int i = 0; i < _o_mixins.length(); i++)
+                mixinFiles[i] = _o_mixins.getString(i);
+        }else mixinFiles = new String[0];
     }
 
     @ApiStatus.Internal
@@ -89,6 +97,10 @@ public class ModInstance implements Comparable<ModInstance> {
 
     public @NotNull String getIcon() {
         return this.icon;
+    }
+
+    public @NotNull String[] getMixinBootstraps() {
+        return this.mixinFiles;
     }
 
     @Override

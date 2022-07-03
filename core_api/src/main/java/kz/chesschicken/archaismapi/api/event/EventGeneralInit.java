@@ -24,6 +24,22 @@ import net.mine_diver.unsafeevents.Event;
 import org.jetbrains.annotations.NotNull;
 
 public class EventGeneralInit {
+    public static class EventPreInit extends Event {
+
+        public final Environment TYPE;
+
+        public EventPreInit(@NotNull Environment a) {
+            this.TYPE = a;
+        }
+
+        @Override
+        protected int getEventID() {
+            return ID;
+        }
+
+        public static final int ID = NEXT_ID.incrementAndGet();
+    }
+
     public static class EventInit extends Event {
 
         public final Environment TYPE;
