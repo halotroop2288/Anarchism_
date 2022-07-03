@@ -55,7 +55,7 @@ public class ModsGrabber {
                     ZipEntry mod_descFile = zipFile.getEntry("description.json");
 
                     if(mod_descFile == null) {
-                        ArchaismUnderscore.LOGGER.severe("The file " + path.toFile().getName() + " doesn't include description file! Aborting its initialization!");
+                        ArchaismUnderscore.LOGGER.error("The file " + path.toFile().getName() + " doesn't include description file! Aborting its initialization!");
                         return;
                     }
 
@@ -71,7 +71,7 @@ public class ModsGrabber {
                 }
             });
         }catch (IOException e) {
-            ArchaismUnderscore.LOGGER.severe("Can't walk inside folder (" + folder.toAbsolutePath() + ") !");
+            ArchaismUnderscore.LOGGER.error("Can't walk inside folder (" + folder.toAbsolutePath() + ") !");
         }
     }
 

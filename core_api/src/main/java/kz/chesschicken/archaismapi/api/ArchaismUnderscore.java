@@ -25,12 +25,13 @@ import it.unimi.dsi.fastutil.objects.ObjectSet;
 import kz.chesschicken.archaismapi.api.mod.ModInstance;
 import net.mine_diver.unsafeevents.Event;
 import net.mine_diver.unsafeevents.EventBus;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixins;
 
 import java.lang.reflect.Method;
 import java.util.function.Consumer;
-import java.util.logging.Logger;
 
 public class ArchaismUnderscore {
     public final EventBus EVENT_BUS = new EventBus();
@@ -72,7 +73,7 @@ public class ArchaismUnderscore {
     }
 
     private static ArchaismUnderscore instance;
-    public static final Logger LOGGER = Logger.getLogger("ArchaismAPI");
+    public static final Logger LOGGER = LogManager.getLogger("ArchaismAPI");
     public static @NotNull ArchaismUnderscore getInstance() {
         if(instance == null)
             instance = new ArchaismUnderscore();

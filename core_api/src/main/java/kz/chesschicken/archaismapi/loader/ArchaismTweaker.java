@@ -43,7 +43,7 @@ public class ArchaismTweaker implements ITweaker {
     @Override
     public void injectIntoClassLoader(LaunchClassLoader classLoader) {
         //TODO: Debug code, remove later.
-        ArchaismUnderscore.LOGGER.fine("Arguments: " + args.toString());
+        ArchaismUnderscore.LOGGER.info("Arguments: " + args.toString());
 
         //TODO: Add here a check for need.
         classLoader.registerTransformer("net.minecraft.launchwrapper.injector.VanillaTweakInjector");
@@ -54,7 +54,7 @@ public class ArchaismTweaker implements ITweaker {
 
         /* Parse Mods */
         Path path = new File("mods").toPath();
-        ArchaismUnderscore.LOGGER.fine("Mods folder: " + path.toAbsolutePath());
+        ArchaismUnderscore.LOGGER.info("Mods folder: " + path.toAbsolutePath());
         ModsGrabber.prepareFolderMods(path);
         ModsGrabber.loadMods();
 

@@ -66,7 +66,7 @@ public class ModInstance implements Comparable<ModInstance> {
         try {
             return Class.forName(s);
         }catch (ClassNotFoundException e) {
-            ArchaismUnderscore.LOGGER.severe(e.getMessage());
+            ArchaismUnderscore.LOGGER.error(e.getMessage());
             return null;
         }
     }
