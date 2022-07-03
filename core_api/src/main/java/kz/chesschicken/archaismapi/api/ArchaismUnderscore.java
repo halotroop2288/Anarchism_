@@ -52,7 +52,7 @@ public class ArchaismUnderscore {
     }
 
     public void registerMod(@NotNull ModInstance a) {
-        System.out.println("Registering mod: " + a.getID() + " ; name: " + a.getName());
+        ArchaismUnderscore.LOGGER.info("Registering mod: " + a.getID() + " ; name: " + a.getName());
         modList.put(a.getID(), a);
     }
 

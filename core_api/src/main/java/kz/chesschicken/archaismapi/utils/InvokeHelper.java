@@ -19,6 +19,7 @@
  */
 package kz.chesschicken.archaismapi.utils;
 
+import kz.chesschicken.archaismapi.api.ArchaismUnderscore;
 import org.jetbrains.annotations.NotNull;
 import sun.misc.Unsafe;
 
@@ -40,7 +41,7 @@ public class InvokeHelper {
     public static @NotNull ClassLoader getHomeClassLoader() {
         if(ehCL)
             return homeClassLoader;
-        System.out.println("Something is wrong... entirely wrong...");
+        ArchaismUnderscore.LOGGER.warn("Something is wrong... entirely wrong...");
         return ClassLoader.getSystemClassLoader();
     }
 
