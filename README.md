@@ -9,8 +9,8 @@ Might be useful for running speicific mods on projects like ReIndev and NSSS.
 ### Modpacks
 
 For simple installation, consider installing one of these packs:
-- [Base b1.7.3 MultiMC pack (Modpacks and b1.7.3 based mods)]()
-- [Base a1.1.2_01 MultiMC pack (NSSS)]()
+- [Base b1.7.3 MultiMC pack (Modpacks and b1.7.3 based mods)](https://github.com/ChessChicken-KZ/Archaism-Underscore/releases/download/1-0.1/ArchaismUnderscore_1-0.1_b1.7.3.zip)
+- (WIP)
 
 ## Q/A
 
