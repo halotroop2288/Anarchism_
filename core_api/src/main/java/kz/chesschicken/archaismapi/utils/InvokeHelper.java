@@ -26,11 +26,14 @@ import sun.misc.Unsafe;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Field;
 
+/**
+ * A set of accessor tools, might be useful while processing mixins.
+ */
 public class InvokeHelper {
 
-    private static Unsafe UNSAFE_INSTANCE;
-    private static MethodHandles.Lookup IMPL_LOOKUP_INSTANCE;
-    private static ClassLoader homeClassLoader;
+    static Unsafe UNSAFE_INSTANCE;
+    static MethodHandles.Lookup IMPL_LOOKUP_INSTANCE;
+    static ClassLoader homeClassLoader;
     static boolean ehCL;
 
     public static void initClassLoader(@NotNull ClassLoader loader) {
@@ -39,8 +42,7 @@ public class InvokeHelper {
     }
 
     public static @NotNull ClassLoader getHomeClassLoader() {
-        if(ehCL)
-            return homeClassLoader;
+        if(ehCL) return homeClassLoader;
         ArchaismUnderscore.LOGGER.warn("Something is wrong... entirely wrong...");
         return ClassLoader.getSystemClassLoader();
     }

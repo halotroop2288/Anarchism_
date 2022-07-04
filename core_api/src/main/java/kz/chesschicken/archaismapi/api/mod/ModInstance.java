@@ -41,10 +41,16 @@ public class ModInstance implements Comparable<ModInstance> {
 
     public ModInstance(@NotNull InputStream o) {
         AdvancedJSONObject object = new AdvancedJSONObject(new BufferedReader(new InputStreamReader(o, StandardCharsets.UTF_8)).lines().collect(Collectors.joining()));
+
+        if(!object.has("modid")) {
+            ArchaismUnderscore.LOGGER.error("A modification doesn't include \"modid\" parameter in its' description file!");
+            throw new RuntimeException("A modification doesn't include \"modid\" parameter in its' description file!");
+        }
+
         modid = object.getString("modid");
-        name = object.getString("name");
-        desc = object.getOrDefault("description", "DEFAULT_DESCRIPTION");
-        version = object.getString("version");
+        name = object.getOrDefault("name", "default_name");
+        desc = object.getOrDefault("description", "default_description");
+        version = object.getOrDefault("version", "default_version");
         icon = object.getOrDefault("icon","/pack.png");
 
         if(object.has("classes")) {

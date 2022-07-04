@@ -70,18 +70,20 @@ public class ArchaismTweaker implements ITweaker {
 
     @Override
     public void injectIntoClassLoader(LaunchClassLoader classLoader) {
-        //TODO: Debug code, remove later.
+        /* Arguments debug output. */
         ArchaismUnderscore.LOGGER.info("Arguments: " + args.toString());
 
         InvokeHelper.initClassLoader(classLoader);
 
-        //TODO: Add here a check for need.
+        /* Register additional mixins transformer. */
         if(parseBoolean("--au-vti")) {
             ArchaismUnderscore.LOGGER.info("Registering VanillaTweakInjector as a transformer.");
             classLoader.registerTransformer("net.minecraft.launchwrapper.injector.VanillaTweakInjector");
+        }else if(parseString("--au-cti") != null) {
+            classLoader.registerTransformer(parseString("--au-cti"));
         }
 
-        /* Parse Mods */
+        /* Register modifications in mods folder. */
         File modsFolder = new File("mods");
         ArchaismUnderscore.LOGGER.info("Mods folder: " + modsFolder.getAbsolutePath());
         ModsGrabber.prepareFolderMods(modsFolder, classLoader);

@@ -21,14 +21,14 @@ package kz.chesschicken.archaismapi.api;
 
 
 import kz.chesschicken.archaismapi.api.mod.ModInstance;
-import kz.chesschicken.archaismapi.utils.InvokeHelper;
 import net.minecraft.launchwrapper.LaunchClassLoader;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodType;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.jar.JarFile;
+import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -36,35 +36,28 @@ public class ModsGrabber {
 
 
     public static void prepareFolderMods(@NotNull File folder, LaunchClassLoader loader) {
-//        MethodHandle __addURL;
-//        URLClassLoader __mainJar = (URLClassLoader) ClassLoader.getSystemClassLoader();
-//
-//        try {
-//            __addURL = InvokeHelper.getImplLookupInstance().findVirtual(URLClassLoader.class, "addURL", MethodType.methodType(void.class, URL.class));
-//        } catch (NoSuchMethodException | IllegalAccessException e) {
-//            throw new RuntimeException(e);
-//        }
-        if(!folder.isDirectory())
-            throw new RuntimeException("What the fock?");
+        if(!folder.isDirectory()) {
+            ArchaismUnderscore.LOGGER.error("The \"mods\" folder is not indeed a folder. Aborting.");
+            return;
+        }
 
-        for (File fileEntry : folder.listFiles()) {
-            if (!fileEntry.isDirectory()) {
-                if(fileEntry.getName().endsWith(".jar")) {
-                    try {
-                        ZipFile zipFile = new JarFile(fileEntry);
-                        ZipEntry mod_descFile = zipFile.getEntry("description.json");
-
-                        if(mod_descFile == null) {
-                            ArchaismUnderscore.LOGGER.error("The file " + fileEntry.getName() + " doesn't include description file! Aborting its initialization!");
-                            return;
-                        }
-                        loader.addURL(fileEntry.toURI().toURL());
-                        ArchaismUnderscore.getInstance().registerMod(new ModInstance(zipFile.getInputStream(mod_descFile)));
-                    } catch (IOException e) {
-                        e.printStackTrace();
+        try(Stream<Path> stream = Files.walk(folder.toPath())) {
+            stream.filter(s -> s.toFile().getName().endsWith(".jar")).forEach(a -> {
+                try {
+                    ZipFile zipFile = new JarFile(a.toFile());
+                    ZipEntry desc = zipFile.getEntry("description.json");
+                    if(desc == null) {
+                        ArchaismUnderscore.LOGGER.error("The file " + a.toFile().getName() + " doesn't include description file! Aborting its initialization!");
+                        return;
                     }
+                    loader.addURL(a.toFile().toURI().toURL());
+                    ArchaismUnderscore.getInstance().registerMod(new ModInstance(zipFile.getInputStream(desc)));
+                } catch (IOException e) {
+                    ArchaismUnderscore.LOGGER.error("Failed to parse a mod!", e);
                 }
-            }
+            });
+        }catch (IOException e) {
+            ArchaismUnderscore.LOGGER.error("Failed to parse mods folder!", e);
         }
     }
 
