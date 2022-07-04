@@ -24,6 +24,8 @@ import kz.chesschicken.archaismapi.api.ModsGrabber;
 import kz.chesschicken.archaismapi.utils.InvokeHelper;
 import net.minecraft.launchwrapper.ITweaker;
 import net.minecraft.launchwrapper.LaunchClassLoader;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.launch.MixinBootstrap;
 import org.spongepowered.asm.mixin.MixinEnvironment;
 
@@ -33,7 +35,7 @@ import java.util.List;
 public class ArchaismTweaker implements ITweaker {
     private List<String> args;
 
-    boolean parseBoolean(String f) {
+    boolean parseBoolean(@NotNull String f) {
         for(String a : args) {
             if(a.startsWith(f)) {
                 String[] b = a.split("=");
@@ -43,7 +45,7 @@ public class ArchaismTweaker implements ITweaker {
         return false;
     }
 
-    String parseString(String f) {
+    @Nullable String parseString(@NotNull String f) {
         for(String a : args) {
             if(a.startsWith(f)) {
                 return a.split("=")[1];
@@ -52,7 +54,7 @@ public class ArchaismTweaker implements ITweaker {
         return null;
     }
 
-    String[] provideGameArgs() {
+    @NotNull String[] provideGameArgs() {
         String[] main = new String[] {"null", "null"};
         for(String a : args) {
             if(a.startsWith("--username"))

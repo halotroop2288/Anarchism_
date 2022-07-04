@@ -58,6 +58,7 @@ public class ArchaismUnderscore {
 
     private static ArchaismUnderscore instance;
     public static final Logger LOGGER = LogManager.getLogger("ArchaismAPI");
+    public static final String API_VERSION = "1-0.1";
     public static @NotNull ArchaismUnderscore getInstance() {
         if(instance == null)
             instance = new ArchaismUnderscore();
