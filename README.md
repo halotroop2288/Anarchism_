@@ -3,6 +3,11 @@ Archaism Underscore - a small API for flexible integration.
 
 Might be useful for running speicific mods on projects like ReIndev and NSSS.
 
+**Features:**
+- [X] [Mixins](https://github.com/SpongePowered/Mixin) as main "base class edits" alternative.
+- [X] Small and quick mod loader.
+- [X] Launch from launchwrapper.
+
 ## Installation
 **DO NOT INSTALL THIS SEPARATELY FROM MODPACK INSTANCES WITHOUT , YOU CAN BROKE EVERYTHING!**
 
