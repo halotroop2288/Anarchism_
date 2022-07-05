@@ -23,6 +23,7 @@ import it.unimi.dsi.fastutil.objects.AbstractObject2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import org.jetbrains.annotations.NotNull;
 
+@SuppressWarnings("unused")
 public enum Environment {
     CLIENT,
     SERVER; //<- is this even going to be implemented?
