@@ -17,10 +17,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
  * USA
  */
-package kz.chesschicken.archaismapi.api;
+package com.halotroop.anarchismapi.api;
 
 
-import kz.chesschicken.archaismapi.api.mod.ModInstance;
+import com.halotroop.anarchismapi.api.mod.ModInstance;
 import net.minecraft.launchwrapper.LaunchClassLoader;
 import org.jetbrains.annotations.NotNull;
 
@@ -33,33 +33,31 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 public class ModsGrabber {
-
-
     public static void prepareFolderMods(@NotNull File folder, LaunchClassLoader loader) {
         if(!folder.isDirectory()) {
-            ArchaismUnderscore.LOGGER.error("The \"mods\" folder is not indeed a folder. Aborting.");
+            AnarchismUnderscore.LOGGER.error("The \"mods\" folder is not indeed a folder. Aborting.");
             return;
         }
 
-        try(Stream<Path> stream = Files.walk(folder.toPath())) {
+        try (Stream<Path> stream = Files.walk(folder.toPath())) {
             stream.filter(s -> s.toFile().getName().endsWith(".jar")).forEach(a -> {
                 try {
                     ZipFile zipFile = new JarFile(a.toFile());
                     ZipEntry desc = zipFile.getEntry("description.json");
-                    if(desc == null) {
-                        ArchaismUnderscore.LOGGER.error("The file " + a.toFile().getName() + " doesn't include description file! Aborting its initialization!");
+                    if (desc == null) {
+                        AnarchismUnderscore.LOGGER.error("The file " + a.toFile().getName() + " doesn't include description file! Aborting its initialization!");
+                        zipFile.close();
                         return;
                     }
                     loader.addURL(a.toFile().toURI().toURL());
-                    ArchaismUnderscore.getInstance().registerMod(new ModInstance(zipFile.getInputStream(desc)));
+                    AnarchismUnderscore.getInstance().registerMod(new ModInstance(zipFile.getInputStream(desc)));
+                    zipFile.close();
                 } catch (IOException e) {
-                    ArchaismUnderscore.LOGGER.error("Failed to parse a mod!", e);
+                    AnarchismUnderscore.LOGGER.error("Failed to parse a mod!", e);
                 }
             });
-        }catch (IOException e) {
-            ArchaismUnderscore.LOGGER.error("Failed to parse mods folder!", e);
+        } catch (IOException e) {
+            AnarchismUnderscore.LOGGER.error("Failed to parse mods folder!", e);
         }
     }
-
-
 }

@@ -17,7 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
  * USA
  */
-package kz.chesschicken.archaismapi.utils.json;
+package com.halotroop.anarchismapi.utils.json;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -31,8 +31,8 @@ import java.util.Map;
 /**
  * Boilerplate code...
  */
+@SuppressWarnings("unused")
 public class AdvancedJSONObject extends JSONObject {
-
     public boolean entriesExist(@NotNull String @NotNull ... entries) {
         for(String a : entries)
             if(!has(a))

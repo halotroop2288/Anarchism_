@@ -17,19 +17,23 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
  * USA
  */
-package kz.chesschicken.archaismapi.api;
+package com.halotroop.anarchismapi.api;
 
+import com.halotroop.anarchismapi.api.mod.ModInstance;
 import it.unimi.dsi.fastutil.objects.AbstractObject2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectSet;
-import kz.chesschicken.archaismapi.api.mod.ModInstance;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixins;
 
+@SuppressWarnings("unused")
+public class AnarchismUnderscore {
+    private static AnarchismUnderscore instance;
+    public static final Logger LOGGER = LogManager.getLogger("ArchaismAPI");
+    public static final String API_VERSION = "1-0.1";
 
-public class ArchaismUnderscore {
     private final AbstractObject2ObjectMap<String, ModInstance> modList = new Object2ObjectOpenHashMap<>();
 
     public @NotNull ModInstance getByID(@NotNull String s) {
@@ -42,26 +46,22 @@ public class ArchaismUnderscore {
 
     public void loadMixins() {
         ModInstance modInstance;
-        for(String a : getModList()) {
+        for (String a : getModList()) {
             modInstance = getByID(a);
-            if(modInstance.getMixinBootstraps().length < 1)
-                continue;
-            for(String s : modInstance.getMixinBootstraps())
+            if (modInstance.getMixinBootstraps().length < 1) continue;
+            for (String s : modInstance.getMixinBootstraps()) {
                 Mixins.addConfiguration(s);
+            }
         }
     }
 
     public void registerMod(@NotNull ModInstance a) {
-        ArchaismUnderscore.LOGGER.info("Registering mod: " + a.getID() + " ; name: " + a.getName());
+        AnarchismUnderscore.LOGGER.info("Registering mod: " + a.getID() + " ; name: " + a.getName());
         modList.put(a.getID(), a);
     }
 
-    private static ArchaismUnderscore instance;
-    public static final Logger LOGGER = LogManager.getLogger("ArchaismAPI");
-    public static final String API_VERSION = "1-0.1";
-    public static @NotNull ArchaismUnderscore getInstance() {
-        if(instance == null)
-            instance = new ArchaismUnderscore();
+    public static @NotNull AnarchismUnderscore getInstance() {
+        if (instance == null) instance = new AnarchismUnderscore();
         return instance;
     }
 }

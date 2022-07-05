@@ -17,9 +17,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
  * USA
  */
-package kz.chesschicken.archaismapi.utils;
+package com.halotroop.anarchismapi.utils;
 
-import kz.chesschicken.archaismapi.api.ArchaismUnderscore;
+import com.halotroop.anarchismapi.api.AnarchismUnderscore;
 import org.jetbrains.annotations.NotNull;
 import sun.misc.Unsafe;
 
@@ -30,7 +30,6 @@ import java.lang.reflect.Field;
  * A set of accessor tools, might be useful while processing mixins.
  */
 public class InvokeHelper {
-
     static Unsafe UNSAFE_INSTANCE;
     static MethodHandles.Lookup IMPL_LOOKUP_INSTANCE;
     static ClassLoader homeClassLoader;
@@ -43,7 +42,7 @@ public class InvokeHelper {
 
     public static @NotNull ClassLoader getHomeClassLoader() {
         if(ehCL) return homeClassLoader;
-        ArchaismUnderscore.LOGGER.warn("Something is wrong... entirely wrong...");
+        AnarchismUnderscore.LOGGER.warn("Something is wrong... entirely wrong...");
         return ClassLoader.getSystemClassLoader();
     }
 

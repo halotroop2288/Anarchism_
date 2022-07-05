@@ -17,7 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
  * USA
  */
-package kz.chesschicken.archaismapi.api.inject;
+package com.halotroop.anarchismapi.api.inject;
 
 import it.unimi.dsi.fastutil.objects.AbstractObject2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
@@ -37,11 +37,11 @@ public enum Environment {
         return mappings.getOrDefault(s, s);
     }
 
-    public static void addMapping(@NotNull Environment environment, @NotNull String deob, @NotNull String obf) {
-        environment.addMapping(deob, obf);
+    public static void addMapping(@NotNull Environment environment, @NotNull String deobf, @NotNull String obf) {
+        environment.addMapping(deobf, obf);
     }
 
-    public static @NotNull String getMapping(@NotNull Environment environment, @NotNull String deob) {
-        return environment.getMapping(deob);
+    public static @NotNull String getMapping(@NotNull Environment environment, @NotNull String deobf) {
+        return environment.getMapping(deobf);
     }
 }

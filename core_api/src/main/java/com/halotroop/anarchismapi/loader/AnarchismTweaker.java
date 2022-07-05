@@ -17,11 +17,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
  * USA
  */
-package kz.chesschicken.archaismapi.loader;
+package com.halotroop.anarchismapi.loader;
 
-import kz.chesschicken.archaismapi.api.ArchaismUnderscore;
-import kz.chesschicken.archaismapi.api.ModsGrabber;
-import kz.chesschicken.archaismapi.utils.InvokeHelper;
+import com.halotroop.anarchismapi.api.AnarchismUnderscore;
+import com.halotroop.anarchismapi.api.ModsGrabber;
+import com.halotroop.anarchismapi.utils.InvokeHelper;
 import net.minecraft.launchwrapper.ITweaker;
 import net.minecraft.launchwrapper.LaunchClassLoader;
 import org.jetbrains.annotations.NotNull;
@@ -32,7 +32,8 @@ import org.spongepowered.asm.mixin.MixinEnvironment;
 import java.io.File;
 import java.util.List;
 
-public class ArchaismTweaker implements ITweaker {
+@SuppressWarnings({"unused", "SameParameterValue"})
+public class AnarchismTweaker implements ITweaker {
     private List<String> args;
 
     boolean parseBoolean(@NotNull String f) {
@@ -73,13 +74,13 @@ public class ArchaismTweaker implements ITweaker {
     @Override
     public void injectIntoClassLoader(LaunchClassLoader classLoader) {
         /* Arguments debug output. */
-        ArchaismUnderscore.LOGGER.info("Arguments: " + args.toString());
+        AnarchismUnderscore.LOGGER.info("Arguments: " + args.toString());
 
         InvokeHelper.initClassLoader(classLoader);
 
         /* Register additional mixins transformer. */
         if(parseBoolean("--au-vti")) {
-            ArchaismUnderscore.LOGGER.info("Registering VanillaTweakInjector as a transformer.");
+            AnarchismUnderscore.LOGGER.info("Registering VanillaTweakInjector as a transformer.");
             classLoader.registerTransformer("net.minecraft.launchwrapper.injector.VanillaTweakInjector");
         }else if(parseString("--au-cti") != null) {
             classLoader.registerTransformer(parseString("--au-cti"));
@@ -87,13 +88,13 @@ public class ArchaismTweaker implements ITweaker {
 
         /* Register modifications in mods folder. */
         File modsFolder = new File("mods");
-        ArchaismUnderscore.LOGGER.info("Mods folder: " + modsFolder.getAbsolutePath());
+        AnarchismUnderscore.LOGGER.info("Mods folder: " + modsFolder.getAbsolutePath());
         ModsGrabber.prepareFolderMods(modsFolder, classLoader);
 
         /* Init Mixins */
         MixinBootstrap.init();
         MixinEnvironment.getDefaultEnvironment().setSide(MixinEnvironment.Side.CLIENT);
-        ArchaismUnderscore.getInstance().loadMixins();
+        AnarchismUnderscore.getInstance().loadMixins();
     }
 
     @Override

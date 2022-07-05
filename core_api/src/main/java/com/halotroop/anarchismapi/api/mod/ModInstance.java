@@ -17,11 +17,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
  * USA
  */
-package kz.chesschicken.archaismapi.api.mod;
+package com.halotroop.anarchismapi.api.mod;
 
-import kz.chesschicken.archaismapi.api.ArchaismUnderscore;
-import kz.chesschicken.archaismapi.utils.InvokeHelper;
-import kz.chesschicken.archaismapi.utils.json.AdvancedJSONObject;
+import com.halotroop.anarchismapi.api.AnarchismUnderscore;
+import com.halotroop.anarchismapi.utils.InvokeHelper;
+import com.halotroop.anarchismapi.utils.json.AdvancedJSONObject;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -34,20 +34,21 @@ import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("unused")
 public class ModInstance implements Comparable<ModInstance> {
-    protected final String modid, name, desc, version, icon;
+    protected final String modId, name, desc, version, icon;
     protected final Class<?>[] launchClasses;
     protected final String[] mixinFiles;
 
     public ModInstance(@NotNull InputStream o) {
         AdvancedJSONObject object = new AdvancedJSONObject(new BufferedReader(new InputStreamReader(o, StandardCharsets.UTF_8)).lines().collect(Collectors.joining()));
 
-        if(!object.has("modid")) {
-            ArchaismUnderscore.LOGGER.error("A modification doesn't include \"modid\" parameter in its' description file!");
-            throw new RuntimeException("A modification doesn't include \"modid\" parameter in its' description file!");
+        if(!object.has("mod_id")) {
+            AnarchismUnderscore.LOGGER.error("A modification doesn't include \"mod_id\" parameter in its' description file!");
+            throw new RuntimeException("A modification doesn't include \"mod_id\" parameter in its' description file!");
         }
 
-        modid = object.getString("modid");
+        modId = object.getString("mod_id");
         name = object.getOrDefault("name", "default_name");
         desc = object.getOrDefault("description", "default_description");
         version = object.getOrDefault("version", "default_version");
@@ -73,7 +74,7 @@ public class ModInstance implements Comparable<ModInstance> {
         try {
             return InvokeHelper.getHomeClassLoader().loadClass(s);
         }catch (ClassNotFoundException e) {
-            ArchaismUnderscore.LOGGER.error(e.getMessage());
+            AnarchismUnderscore.LOGGER.error(e.getMessage());
             return null;
         }
     }
@@ -83,7 +84,7 @@ public class ModInstance implements Comparable<ModInstance> {
     }
 
     public @NotNull String getID() {
-        return this.modid;
+        return this.modId;
     }
 
     public @NotNull String getVersion() {
@@ -112,16 +113,16 @@ public class ModInstance implements Comparable<ModInstance> {
             return true;
         if (o == null || this.getClass() != o.getClass())
             return false;
-        return Objects.equals(modid, ((ModInstance) o).modid);
+        return Objects.equals(modId, ((ModInstance) o).modId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(modid, name, version);
+        return Objects.hash(modId, name, version);
     }
 
     @Override
     public int compareTo(ModInstance o) {
-        return this.modid.compareTo(o.modid);
+        return this.modId.compareTo(o.modId);
     }
 }
