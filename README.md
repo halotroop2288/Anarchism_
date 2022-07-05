@@ -1,7 +1,7 @@
-# Archaism-Underscore
-Archaism Underscore - a small API for flexible integration.
+# Anarchism_
+Anarchism Underscore - a small API for flexible integration.
 
-Might be useful for running speicific mods on projects like ReIndev and NSSS.
+Might be useful for running specific mods on projects like ReIndev and NSSS.
 
 **Features:**
 - [X] [Mixins](https://github.com/SpongePowered/Mixin) as main "base class edits" alternative.
@@ -9,13 +9,10 @@ Might be useful for running speicific mods on projects like ReIndev and NSSS.
 - [X] Launch from launchwrapper.
 
 ## Installation
-**DO NOT INSTALL THIS SEPARATELY FROM MODPACK INSTANCES WITHOUT , YOU CAN BROKE EVERYTHING!**
 
-### Modpacks
+Install this as a JAR mod to your PolyMC instance.
 
-For simple installation, consider installing one of these packs:
-- [Base b1.7.3 MultiMC pack (Modpacks and b1.7.3 based mods)](https://github.com/ChessChicken-KZ/Archaism-Underscore/releases/download/1-0.1/ArchaismUnderscore_1-0.1_b1.7.3.zip)
-- (WIP)
+See [releases](https://github.com/halotroop2288/Anarchism_/releases)
 
 ## Q/A
 

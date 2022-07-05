@@ -17,7 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
  * USA
  */
-package kz.chesschicken.archaismapi.api.inject;
+package com.halotroop.anarchismapi.api.inject;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

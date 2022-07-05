@@ -2,8 +2,8 @@ plugins {
     id 'java'
 }
 
-group 'kz.chesschicken'
-version '1-0.1'
+group 'com.halotroop'
+version '0.1.0'
 
 repositories {
     mavenCentral()
